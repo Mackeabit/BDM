@@ -1,12 +1,23 @@
 const express = require('express');
+const path = require('path');
+
 const app = express();
 const PORT = 3000;
 
-// 이미 tiles 폴더가 있으므로, 해당 폴더의 static files를 제공하기 위한 설정
-app.use('/tiles', express.static('tiles'));
+// 정적 파일(타일 이미지)을 제공하기 위한 디렉토리 설정
+const tilesDirectory = path.join(__dirname, 'tiles');
 
-app.get('/', (req, res) => {
-    res.send("BDO Map Server is Running!");
+// 타일 이미지 라우터 설정
+app.get('/tiles/:z/:x/:y.png', (req, res) => {
+    const { z, x, y } = req.params;
+    const tilePath = path.join(tilesDirectory, z, x, `${y}.png`);
+
+    // 타일 이미지 응답
+    res.sendFile(tilePath, (err) => {
+        if (err) {
+            res.status(404).send('Tile not found');
+        }
+    });
 });
 
 app.listen(PORT, () => {
