@@ -9,6 +9,9 @@ const PORT = 8389;
 const tilesDirectory = path.join(__dirname, 'tiles');
 const fallbackTile = path.join(tilesDirectory, '6/0/0.png'); // 대체 이미지 경로
 
+// 정적 파일 제공 (public 폴더 내의 아이콘 및 기타 리소스 제공)
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 app.use(cors());
 
 // 타일 이미지 라우터 설정
