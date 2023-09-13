@@ -1,9 +1,27 @@
+require('dotenv').config(); //설정
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
 
 const app = express();
 const PORT = 8389;
+
+// MongoDB 연결 스트링
+const mongoose = require('mongoose');
+const MONGODB_URI = process.env.MONGODB_URI;
+
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('Failed to connect to MongoDB', err);
+});
 
 // 정적 파일(타일 이미지)을 제공하기 위한 디렉토리 설정
 const tilesDirectory = path.join(__dirname, 'tiles');
