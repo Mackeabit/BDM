@@ -23,14 +23,33 @@ mongoose.connection.on('error', (err) => {
   console.error('Failed to connect to MongoDB', err);
 });
 
+
 // 정적 파일(타일 이미지)을 제공하기 위한 디렉토리 설정
 const tilesDirectory = path.join(__dirname, 'tiles');
 const fallbackTile = path.join(tilesDirectory, '6/0/0.png'); // 대체 이미지 경로
 
-// 정적 파일 제공 (public 폴더 내의 아이콘 및 기타 리소스 제공)
-app.use('/public', express.static(path.join(__dirname, 'public')));
+//유저 모델
+const userRoutes = require('./routes/userRoutes');
+const npcRoutes = require('./routes/npcRoutes');
+const markerRoutes = require('./routes/markerRoutes');
+const locationRoutes = require('./routes/locationRoutes');
+const adminMarkerRoutes = require('./routes/adminMarkerRoutes');
+
+
+
+//유저 생성
+app.use('/api/users', userRoutes);
+app.use('/api/npcs', npcRoutes);
+app.use('/api/markers', markerRoutes);
+app.use('/api/locations', locationRoutes);
+app.use('/api/adminMarkers', adminMarkerRoutes);
+
+
 
 app.use(cors());
+
+//JSON 파싱 미들웨이
+app.use(express.json());
 
 // 타일 이미지 라우터 설정
 app.get('/tiles/:z/:x/:y.png', (req, res) => {
