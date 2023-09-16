@@ -28,23 +28,19 @@ mongoose.connection.on('error', (err) => {
 const tilesDirectory = path.join(__dirname, 'tiles');
 const fallbackTile = path.join(tilesDirectory, '6/0/0.png'); // 대체 이미지 경로
 
-//유저 모델
+//모델
 const userRoutes = require('./routes/userRoutes');
 const npcRoutes = require('./routes/npcRoutes');
 const markerRoutes = require('./routes/markerRoutes');
 const locationRoutes = require('./routes/locationRoutes');
 const adminMarkerRoutes = require('./routes/adminMarkerRoutes');
 
-
-
-//유저 생성
+//모델 api 생성
 app.use('/api/users', userRoutes);
 app.use('/api/npcs', npcRoutes);
 app.use('/api/markers', markerRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/adminMarkers', adminMarkerRoutes);
-
-
 
 app.use(cors());
 
