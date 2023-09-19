@@ -1,6 +1,3 @@
-// server.js
-
-// 환경 변수를 로드하기 위한 설정
 require('dotenv').config();
 
 // 필요한 모듈들을 임포트
@@ -40,9 +37,6 @@ const fallbackTile = path.join(tilesDirectory, '6/0/0.png');
 app.use(cors());
 app.use(express.json());
 
-// Passport 미들웨어 초기화 및 설정 적용
-app.use(passport.initialize());
-require('./config/passport')(passport);
 
 // API 라우터들을 임포트
 const userRoutes = require('./routes/userRoutes');
@@ -57,6 +51,11 @@ app.use('/api/npcs', npcRoutes);
 app.use('/api/markers', markerRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/adminMarkers', adminMarkerRoutes);
+
+// Passport 미들웨어 초기화 및 설정 적용
+app.use(passport.initialize());
+require('./config/passport')(passport);
+
 
 // 타일 이미지 라우터 설정
 app.get('/tiles/:z/:x/:y.png', (req, res) => {
