@@ -55,4 +55,36 @@ router.get('/', async (req, res) => {
     }
   });
   
+  // Sign Up
+  router.post('/signup', async (req, res) => {
+    const { username, password } = req.body;
+
+    // 아이디와 비밀번호 입력 확인
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
+
+    try {
+        // 중복 아이디 체크
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Username already exists' });
+        }
+
+        // 새로운 사용자 생성
+        const user = new User(req.body);
+        await user.save();
+
+        res.status(201).json({
+            user: {
+                id: user._id,
+                username: user.username,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+  });
+
 module.exports = router;
