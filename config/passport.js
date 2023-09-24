@@ -1,9 +1,10 @@
+require('dotenv').config();
+
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
-require('dotenv').config();
 
 const options = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -29,10 +30,14 @@ module.exports = passport => {
             {
                 clientID: process.env.GOOGLE_CLIENT,
                 clientSecret: process.env.GOOGLE_PWD,
-                callbackURL: 'http://localhost:8389/api/users/google/callback'
+                callbackURL: 'http://localhost:8389/api/users/google/callback',
+                scope: ['email', 'profile'],
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
+
+                    console.log(profile);
+
                     const existingUser = await User.findOne({ googleId: profile.id });
                     if (existingUser) return done(null, existingUser);
 

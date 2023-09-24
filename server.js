@@ -33,12 +33,20 @@ mongoose.connection.on('error', (err) => {
 const tilesDirectory = path.join(__dirname, 'tiles');
 const fallbackTile = path.join(tilesDirectory, '6/0/0.png');
 
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
+
 // CORS 및 JSON 파싱 미들웨어 추가
-app.use(cors({
-  origin: 'http://localhost:3000', // 리액트 애플리케이션의 주소
-  methods: ['GET', 'POST'], // 필요한 HTTP 메서드 지정
-  allowedHeaders: ['Content-Type'],
-}));
+// app.use(cors({
+//   origin: 'http://localhost:3000', // 리액트 애플리케이션의 주소
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+// }));
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 

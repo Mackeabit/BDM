@@ -9,7 +9,15 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: function() {
+            // googleId가 없을 때만 password 필드가 필수가 됩니다.
+            return !this.googleId;
+        }
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true // 이를 통해 null 값들 사이에서도 unique 제약을 유지합니다.
     },
     role: {
         type: String,

@@ -132,29 +132,30 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Google Login
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+  router.get('/google/login', passport.authenticate('google', { scope: ['profile'] }));
 
-// Google Login Callback
-router.get('/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/', session: false }),
-    async (req, res) => {
-        // 인증에 성공하면 req.user에 사용자 정보가 저장됩니다.
-        const user = req.user;
-        const payload = {
-            id: user.id,
-            username: user.username,
-            // other fields based on your User schema
-        };
-        const jwtToken = jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: '1h'
-        });
-        
-        return res.json({
-            token: `Bearer ${jwtToken}`,
-            user: payload
-        });
-    }
+  // Google Login Callback
+  router.get('/google/callback', 
+      passport.authenticate('google', { failureRedirect: '/login', session: false }), // 로그인 실패 시 리다이렉션 변경
+      async (req, res) => {
+          // 인증에 성공하면 req.user에 사용자 정보가 저장됩니다.
+
+          console.log('/google/callback');
+
+          const user = req.user;
+          const payload = {
+              id: user.id,
+              username: user.username,
+              // other fields based on your User schema
+          };
+          const jwtToken = jwt.sign(payload, process.env.JWT_SECRET, {
+              expiresIn: '1h'
+          });
+
+          // 클라이언트에 직접 토큰을 보내주지 않고, 클라이언트 측에 토큰을 저장하는 방식 변경 (예: 쿠키, 세션)
+          res.cookie('auth_token', `Bearer ${jwtToken}`, { httpOnly: true, secure: true }); // 토큰을 쿠키로 저장
+          res.redirect('http://localhost:3000/'); // or your desired route
+      }
 );
 
 module.exports = router;
