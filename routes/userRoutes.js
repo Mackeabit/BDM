@@ -121,11 +121,16 @@ router.get('/', async (req, res) => {
             expiresIn: '1h'
         });
 
-        // 5. 토큰 응답
-        return res.json({
-            token: `Bearer ${token}`,
-            user: payload
-        });
+        // // 5. 토큰 응답
+        // return res.json({
+        //     token: `Bearer ${token}`,
+        //     user: payload
+        // });
+
+        // 5. 토큰 쿠키로 저장
+        res.cookie('auth_token', `Bearer ${token}`, { httpOnly: true, secure: false });
+        return res.status(200).json({ user: payload });
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error.' });
@@ -140,7 +145,7 @@ router.get('/', async (req, res) => {
       async (req, res) => {
           // 인증에 성공하면 req.user에 사용자 정보가 저장됩니다.
 
-          console.log('/google/callback');
+          console.log(req);
 
           const user = req.user;
           const payload = {
