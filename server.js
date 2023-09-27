@@ -6,6 +6,7 @@ const path = require('path');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');  // 추가
 
 const app = express();
 const PORT = 8389;
@@ -49,6 +50,31 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+
+// 인증 토큰 확인 로직
+app.get('/api/auth/status', (req, res) => {
+  const token = req.headers.authorization && req.headers.authorization.split(" ")[1];  // "Bearer YOUR_JWT" 형식으로 오는 것을 고려
+
+  console.log('token = ' + token);
+  console.log('status');
+
+  if (!token) {
+    return res.status(401).json({ isAuthenticated: false, message: 'No token provided' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ isAuthenticated: false, message: 'Failed to authenticate token' });
+    }
+    console.log("success token");
+    // 토큰이 유효한 경우
+    res.json({
+      isAuthenticated: true,
+      username: decoded.username,
+      role: decoded.role
+    });
+  });
+});
 
 // API 라우터들을 임포트
 const userRoutes = require('./routes/userRoutes');

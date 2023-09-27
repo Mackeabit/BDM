@@ -128,7 +128,7 @@ router.get('/', async (req, res) => {
         // });
 
         // 5. 토큰 쿠키로 저장
-        res.cookie('auth_token', `Bearer ${token}`, { httpOnly: true, secure: false });
+        res.cookie('auth_token', `Bearer ${token}`, { httpOnly: false, secure: true });
         return res.status(200).json({ user: payload });
         
     } catch (error) {
@@ -144,9 +144,6 @@ router.get('/', async (req, res) => {
       passport.authenticate('google', { failureRedirect: '/login', session: false }), // 로그인 실패 시 리다이렉션 변경
       async (req, res) => {
           // 인증에 성공하면 req.user에 사용자 정보가 저장됩니다.
-
-          console.log(req);
-
           const user = req.user;
           const payload = {
               id: user.id,
@@ -158,7 +155,7 @@ router.get('/', async (req, res) => {
           });
 
           // 클라이언트에 직접 토큰을 보내주지 않고, 클라이언트 측에 토큰을 저장하는 방식 변경 (예: 쿠키, 세션)
-          res.cookie('auth_token', `Bearer ${jwtToken}`, { httpOnly: true, secure: true }); // 토큰을 쿠키로 저장
+          res.cookie('auth_token', `Bearer ${jwtToken}`, { httpOnly: false, secure: true }); // 토큰을 쿠키로 저장
           res.redirect('http://localhost:3000/'); // or your desired route
       }
 );
