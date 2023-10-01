@@ -55,8 +55,7 @@ app.use(express.json());
 app.get('/api/auth/status', (req, res) => {
   const token = req.headers.authorization && req.headers.authorization.split(" ")[1];  // "Bearer YOUR_JWT" 형식으로 오는 것을 고려
 
-  console.log('token = ' + token);
-  console.log('status');
+  console.log('req.headers.authorization = ' + req.headers.authorization);
 
   if (!token) {
     return res.status(401).json({ isAuthenticated: false, message: 'No token provided' });

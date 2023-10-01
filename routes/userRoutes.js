@@ -121,12 +121,6 @@ router.get('/', async (req, res) => {
             expiresIn: '1h'
         });
 
-        // // 5. 토큰 응답
-        // return res.json({
-        //     token: `Bearer ${token}`,
-        //     user: payload
-        // });
-
         // 5. 토큰 쿠키로 저장
         res.cookie('auth_token', `Bearer ${token}`, { httpOnly: false, secure: true });
         return res.status(200).json({ user: payload });
