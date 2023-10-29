@@ -33,6 +33,17 @@ router.get('/', async (req, res) => {
     }
   });
   
+  // count Marker By ID
+  router.get('/:id/markers', async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const count = await Marker.countDocuments({ userId: userId });
+      res.status(200).json({ count });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Update
   router.put('/:id', async (req, res) => {
     try {
